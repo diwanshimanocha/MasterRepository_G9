@@ -1,0 +1,111 @@
+import tkinter as tk
+import math
+
+# Create main window
+root = tk.Tk()
+root.title("Calculator")
+
+# Explanation for each operation
+operation_explanations = {
+    1: "Multiplication",
+    2: "Division",
+    3: "Subtraction",
+    4: "Exponentiation",
+    5: "Square Root",
+    6: "Logarithm Base 10",
+    7: "Trigonometric Function (Sine, Cosine, Tangent)",
+    8: "Inverse Trigonometric Functions (Arcsine, Arccosine, Arctangent)",
+    9: "Cube Root"
+}
+
+# Function to update explanation label
+def update_explanation(event):
+    operation = int(entry_operation.get())
+    explanation = operation_explanations.get(operation, "Invalid Operation")
+    label_explanation.config(text="Explanation: " + explanation)
+
+# Create labels and entry widgets
+label_operation = tk.Label(root, text="Select Operation (1-9):")
+label_operation.grid(row=0, column=0)
+entry_operation = tk.Entry(root)
+entry_operation.grid(row=0, column=1)
+entry_operation.bind('<KeyRelease>', update_explanation)
+
+label_explanation = tk.Label(root, text="Explanation:")
+label_explanation.grid(row=1, column=0, sticky="w")
+
+# Create text box to display operation details
+text_box = tk.Text(root, height=10, width=50)
+text_box.grid(row=2, columnspan=2)
+
+# Initialize text box with all operation details
+for operation, explanation in operation_explanations.items():
+    text_box.insert(tk.END, "Operation {}: {}\n".format(operation, explanation))
+
+label_num1 = tk.Label(root, text="Number 1:")
+label_num1.grid(row=3, column=0)
+entry_num1 = tk.Entry(root)
+entry_num1.grid(row=3, column=1)
+
+label_num2 = tk.Label(root, text="Number 2:")
+label_num2.grid(row=4, column=0)
+entry_num2 = tk.Entry(root)
+entry_num2.grid(row=4, column=1)
+
+label_result = tk.Label(root, text="")
+label_result.grid(row=5, columnspan=2)
+
+# Function to perform operation
+def perform_operation():
+    operation = int(entry_operation.get())
+    try:
+        if operation in [1, 2, 3, 4]:
+            num1 = float(entry_num1.get())
+            num2 = float(entry_num2.get())
+        elif operation in [5, 6, 7, 8, 9]:
+            num = float(entry_num1.get())  # for single number operations, we use the first entry widget
+
+        if operation == 1:
+            mul = num1 * num2
+            label_result.config(text="Operation: Multiplication\nResult: " + str(mul))
+        elif operation == 2:
+            if num2 != 0:
+                div = num1 / num2
+                label_result.config(text="Operation: Division\nResult: " + str(div))
+            else:
+                label_result.config(text="Error: Cannot divide by zero.")
+        elif operation == 3:
+            sub = num1 - num2
+            label_result.config(text="Operation: Subtraction\nResult: " + str(sub))
+        elif operation == 4:
+            exp = num1 ** num2
+            label_result.config(text="Operation: Exponentiation\nResult: " + str(exp))
+        elif operation == 5:
+            sqrt_val = math.sqrt(num)
+            label_result.config(text="Operation: Square Root\nResult: " + str(sqrt_val))
+        elif operation == 6:
+            log_val = math.log10(num)
+            label_result.config(text="Operation: Logarithm Base 10\nResult: " + str(log_val))
+        elif operation == 7:
+            sin_val = math.sin(math.radians(num))
+            cos_val = math.cos(math.radians(num))
+            tan_val = math.tan(math.radians(num))
+            label_result.config(text="Operation: Trigonometric Functions\nSine: " + str(sin_val) + ", Cosine: " + str(cos_val) + ", Tangent: " + str(tan_val))
+        elif operation == 8:
+            asin_val = math.degrees(math.asin(num))
+            acos_val = math.degrees(math.acos(num))
+            atan_val = math.degrees(math.atan(num))
+            label_result.config(text="Operation: Inverse Trigonometric Functions\nInverse Sine: " + str(asin_val) + ", Inverse Cosine: " + str(acos_val) + ", Inverse Tangent: " + str(atan_val))
+        elif operation == 9:
+            cube_root_val = num ** (1/3)
+            label_result.config(text="Operation: Cube Root\nResult: " + str(cube_root_val))
+        else:
+            label_result.config(text="Error: Invalid operation selected.")
+    except ValueError:
+        label_result.config(text="Error: Please enter valid numbers.")
+
+# Create button to perform operation
+btn_calculate = tk.Button(root, text="Calculate", command=perform_operation)
+btn_calculate.grid(row=6, columnspan=2)
+
+root.mainloop()
